@@ -140,9 +140,10 @@ class SectionInfo(FeatureType):
             return {"entry": "", "sections": []}
 
         # properties of entry point, or if invalid, the first executable section
-        try:
-            entry_section = lief_binary.section_from_offset(lief_binary.entrypoint).name
-        except lief.not_found:
+        entry_section = lief_binary.section_from_offset(lief_binary.entrypoint)
+        if entry_section is not None:
+            entry_section = entry_section.name
+        else:
             # bad entry point, let's find the first executable section
             entry_section = ""
             for s in lief_binary.sections:
